@@ -25,6 +25,7 @@ describe('Página de cadastro', () => {
             cy.contains('h2', 'Agora, os dados técnicos:').should('be.visible');
             cy.get('.sc-laZRCg').should('exist').should('be.visible');
 
+
         })
     })
 

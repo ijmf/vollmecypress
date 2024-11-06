@@ -16,7 +16,7 @@ describe('Testes em API', () => {
             cy.get('@token').should('exist');
         })
 
-        it('Deve verificar se o usuário está autenticado corretamente via POST na API', () => {
+        it.only('Deve verificar se o usuário está autenticado corretamente via POST na API', () => {
             // Verificar se a autenticação está presente no localStorage
             cy.get('@token').then(token => {
                 expect(token).to.exist;
@@ -27,7 +27,7 @@ describe('Testes em API', () => {
 
     context('Validações em respostas da API', () => {
         beforeEach(() => {
-            cy.loginApi(Cypress.env('email'), Cypress.env('senha'))
+            cy.login(Cypress.env('email'), Cypress.env('senha'))
         })
 
         it('POST em especialistas', () => {

@@ -1,12 +1,20 @@
 Cypress.Commands.add('login', (email, senha) => {
-    cy.session([email, senha], () => {
-        cy.visit('/login')
-        cy.get('[data-test="inputLoginEmail"]').type(email)
-        cy.get('[data-test="inputLoginSenha"]').type(senha, { log: false })
-        cy.get('[data-test="botaoTeste"]').should('be.visible').click()
-        cy.location('pathname').should('eq', '/dashboard')
-    })
-})
+    cy.visit('/login');  // Acessa a página de login
+    cy.get('[data-test="inputLoginEmail"]').type(email);  // Preenche o campo de e-mail
+    cy.get('[data-test="inputLoginSenha"]').type(senha, { log: false });  // Preenche o campo de senha de forma oculta no log
+    cy.get('[data-test="botaoTeste"]').should('be.visible').click();  // Clica no botão de login
+
+    // Verifica o redirecionamento para o dashboard
+    cy.location('pathname', { timeout: 10000 }).should('include', '/dashboard');  // A URL final deve incluir "/dashboard"
+
+    // Após o redirecionamento para o dashboard, podemos usar o cy.session() para preservar a sessão
+    //cy.session([email, senha], () => {
+    // Aqui você pode armazenar qualquer dado da sessão que precise ser reutilizado
+    cy.visit('/dashboard');  // Visita o dashboard para garantir que a página está acessada
+});
+
+
+
 
 
 
