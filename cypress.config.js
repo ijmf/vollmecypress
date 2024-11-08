@@ -14,6 +14,7 @@ module.exports = defineConfig({
       // implement node event listeners here
     },
     baseUrl: 'http://localhost:3000/',
+    projectId: "y4bi3o",
     video: false,
     watchForFileChanges: false,
     reporter: 'mochawesome',
