@@ -56,6 +56,7 @@ describe('Usuário logado na página de dashboard', () => {
                     especialista.numero,
                     especialista.complemento,
                     especialista.estado
+                    //Teste
                 );
 
                 // Marca o checkbox "Atende por plano?"
