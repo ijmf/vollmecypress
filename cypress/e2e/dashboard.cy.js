@@ -42,7 +42,7 @@ describe('Usuário logado na página de dashboard', () => {
         it('Seleciona o botão checkbox "Atende por plano?" após preenchimento do formulário para visualizar os planos de saúde', () => {
             cy.fixture('especialistas').then((dados) => { // Carrega os dados do fixture
                 const especialista = dados.especialistas[0]; // Acessa o primeiro especialista
-                //Teste2
+
                 // Cadastra o especialista
                 cy.cadastraEspecialista(
                     especialista.nome,
