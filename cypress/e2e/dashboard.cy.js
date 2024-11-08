@@ -67,6 +67,7 @@ describe('Usuário logado na página de dashboard', () => {
                 // Verificar se os checkboxes estão visíveis
                 cy.get('.MuiFormGroup-root').children().each(($checkbox) => {
                     cy.wrap($checkbox).should('be.visible')
+                    //Teste
                 })
             })
         })
