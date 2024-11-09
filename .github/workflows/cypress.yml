@@ -1,50 +1,63 @@
-name: Cypress Tests
+name: Cypress Tests  # Nome do workflow, que é exibido na aba Actions no GitHub
+
+# Definindo os gatilhos para o workflow
 on:
-  push:
+  push:  # O workflow será acionado sempre que houver um push no repositório
     branches:
-      - main
+      - main  # O workflow só será acionado quando houver push na branch principal (main)
+
+# Definição dos jobs do workflow
 jobs:
-  cypress-run:
-    runs-on: ubuntu-latest
+  cypress-run:  # Nome do job que será executado
+    runs-on: ubuntu-latest  # O job será executado em um ambiente Ubuntu (última versão disponível)
+
     strategy:
-      fail-fast: false
+      fail-fast: false  # Se um container falhar, o workflow continua com o outro container (não para a execução inteira)
       matrix:
-        containers: [1, 2]
-    steps:
+        containers: [1, 2]  # O job será executado em dois "containers" (ou instâncias paralelas), permitindo rodar testes em paralelo
+        # Isso é útil para rodar diferentes testes ou instâncias de servidor ao mesmo tempo, melhorando a performance do CI
+
+    steps:  # Definição das etapas (steps) que o job vai executar
       - name: Checkout
-        uses: actions/checkout@v4      
+        uses: actions/checkout@v4  # Primeira etapa é fazer o checkout do código-fonte do repositório para que o workflow possa acessá-lo
+
       - name: Checkout
-        uses: actions/checkout@v4
-        with: 
-          path: server      
-      - name: Start Server BackEnd
+        uses: actions/checkout@v4  # Segunda etapa de checkout, mas dessa vez para um diretório diferente (server)
+        with:
+          path: server  # Aqui, o código do backend será baixado na pasta "server"
+      
+      - name: Start Server BackEnd  # Etapa para iniciar o servidor backend (provavelmente uma API)
         run: |
           cd server
-          npm install
-          npm start &
+          npm install  # Instala as dependências do servidor
+          npm start &  # Inicia o servidor de forma assíncrona (em segundo plano)
           until [ "$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080)" == "200" ]; do
             echo "Waiting for server to start..."
-            sleep 1
+            sleep 1  # Espera o servidor backend ficar disponível (status 200)
           done
-          echo "Server is running successfully."
-        working-directory: server
-      - name: Start Web App FrontEnd
+          echo "Server is running successfully."  # Mensagem indicando que o servidor foi iniciado com sucesso
+        working-directory: server  # Define o diretório de trabalho da etapa como "server", onde o código backend está
+
+      - name: Start Web App FrontEnd  # Etapa para iniciar o servidor frontend (app web)
         run: |
           cd web
-          npm install
-          npm start &        
-      - name: Run Cypress Tests
-        uses: cypress-io/github-action@v6
+          npm install  # Instala as dependências do frontend
+          npm start &  # Inicia o servidor frontend de forma assíncrona (em segundo plano)
+        
+      - name: Run Cypress Tests  # Etapa que executa os testes Cypress
+        uses: cypress-io/github-action@v6  # Usa a ação oficial do Cypress para rodar os testes
         with:
-          spec: |
-            cypress/e2e/cadastro-sucesso.cy.js
-            cypress/e2e/login-clinica.cy.js
-            cypress/e2e/dashboard.cy.js
-          wait-on: 'http://localhost:3000,http://localhost:8080'
-          record: true
-          parallel: true
-          group: 'Cypress Tests'
+          spec: |  # Lista os arquivos de teste que o Cypress deve executar
+            cypress/e2e/cadastro-sucesso.cy.js  # Teste de cadastro
+            cypress/e2e/login-clinica.cy.js  # Teste de login para clínica
+            cypress/e2e/dashboard.cy.js  # Teste para o dashboard
+          wait-on: 'http://localhost:3000,http://localhost:8080'  # Espera que os servidores (frontend e backend) estejam rodando
+          record: true  # Ativa o registro dos resultados no Cypress Dashboard
+          parallel: true  # Executa os testes em paralelo para otimizar o tempo de execução
+          group: 'Cypress Tests'  # Agrupa os testes como "Cypress Tests" no Cypress Dashboard (útil para organização)
         env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#Sempre verifique a indentação do seu arquivo yaml
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}  # Define a Record Key do Cypress a partir dos Secrets do GitHub (segurança)
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token do GitHub para acesso à API do GitHub, usado para obter dados do repositório ou issues
+          
+# Dica de boas práticas:
+# Sempre verifique a indentação do seu arquivo YAML para evitar erros de sintaxe.
