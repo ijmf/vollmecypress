@@ -48,9 +48,9 @@ jobs:
         uses: cypress-io/github-action@v6  # Usa a ação oficial do Cypress para rodar os testes
         with:
           spec: |  # Lista os arquivos de teste que o Cypress deve executar
-            cypress/e2e/cadastro-sucesso.cy.js  # Teste de cadastro
-            cypress/e2e/login-clinica.cy.js  # Teste de login para clínica
-            cypress/e2e/dashboard.cy.js  # Teste para o dashboard
+            cypress/e2e/cadastro-sucesso.cy.js
+            cypress/e2e/login-clinica.cy.js
+            cypress/e2e/dashboard.cy.js
           wait-on: 'http://localhost:3000,http://localhost:8080'  # Espera que os servidores (frontend e backend) estejam rodando
           record: true  # Ativa o registro dos resultados no Cypress Dashboard
           parallel: true  # Executa os testes em paralelo para otimizar o tempo de execução
